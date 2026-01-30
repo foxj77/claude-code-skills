@@ -49,7 +49,7 @@ These skills provide expert knowledge that Claude Code can leverage when assisti
 ### Option 1: Clone to Claude Code Skills Directory
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-code-skills.git ~/.claude/skills/
+git clone https://github.com/foxj77/claude-code-skills.git ~/.claude/skills/
 ```
 
 ### Option 2: Add as Additional Working Directory
