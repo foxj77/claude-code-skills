@@ -35,6 +35,7 @@ These skills provide expert knowledge that Claude Code can leverage when assisti
 | Skill | Description |
 |-------|-------------|
 | [helm-chart-development](./helm-chart-development/) | Creating and structuring Helm charts |
+| [helm-chart-testing](./helm-chart-testing/) | Writing and analyzing Helm test manifests |
 | [helm-chart-maintenance](./helm-chart-maintenance/) | Versioning, testing, and releases |
 | [helm-chart-review](./helm-chart-review/) | Security and quality review |
 
