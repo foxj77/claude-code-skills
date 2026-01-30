@@ -1,10 +1,15 @@
+---
+name: k8s-security-redteam
+description: Use when conducting authorized penetration tests, performing security assessments, running red team exercises, testing security controls, identifying attack paths, or validating hardening measures
+---
+
 # Kubernetes Security Red Team
 
-Expert knowledge for offensive security testing of Kubernetes platforms including penetration testing, attack paths, and vulnerability assessment.
+Perform offensive security testing of Kubernetes platforms including penetration testing, attack paths, and vulnerability assessment.
 
 ## Keywords
 
-kubernetes, security, red team, penetration testing, pentest, attack, exploit, privilege escalation, container escape, rbac, secrets, vulnerability, assessment, offensive
+kubernetes, security, red team, penetration testing, pentest, attack, exploiting, exploit, privilege escalation, container escape, rbac, secrets, vulnerability, assessment, offensive, conducting, performing, running, testing, identifying, validating
 
 ## When to Use This Skill
 

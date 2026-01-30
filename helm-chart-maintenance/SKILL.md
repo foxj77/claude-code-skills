@@ -1,10 +1,15 @@
+---
+name: helm-chart-maintenance
+description: Use when managing chart versions (semantic versioning), updating chart dependencies, implementing upgrade strategies, writing and running chart tests, setting up CI/CD pipelines for charts, handling deprecation and breaking changes, or publishing charts to OCI registries
+---
+
 # Helm Chart Maintenance
 
-Expert knowledge for maintaining Helm charts including versioning, dependency management, upgrades, testing, and release processes.
+Maintain Helm charts including versioning, dependency management, upgrades, testing, and release processes.
 
 ## Keywords
 
-helm, chart, maintenance, versioning, semver, dependencies, upgrade, testing, ci/cd, release, changelog, deprecation, helm-unittest, chart-releaser
+helm, chart, maintenance, versioning, semver, semantic versioning, dependencies, upgrading, upgrade, testing, tests, ci/cd, release, releasing, changelog, deprecation, helm-unittest, chart-releaser, managing, updating, publishing
 
 ## When to Use This Skill
 

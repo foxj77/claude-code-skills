@@ -1,10 +1,15 @@
+---
+name: k8s-continual-improvement
+description: Use when defining and managing SLOs, optimizing cluster costs (FinOps), measuring and reducing toil, conducting capacity planning, assessing platform maturity, implementing feedback loops, or creating improvement roadmaps
+---
+
 # Kubernetes Continual Service Improvement
 
-Expert knowledge for continuous improvement of Kubernetes platforms including SLO management, cost optimization, performance tuning, FinOps, and platform maturity.
+Continuously improve Kubernetes platforms including SLO management, cost optimization, performance tuning, FinOps, and platform maturity.
 
 ## Keywords
 
-kubernetes, slo, sli, sla, error budget, cost optimization, finops, capacity, performance, improvement, maturity, metrics, toil, feedback
+kubernetes, slo, sli, sla, error budget, cost optimization, finops, capacity, performance, improvement, maturity, metrics, toil, feedback, defining, managing, optimizing, measuring, reducing, planning, assessing, implementing, creating
 
 ## When to Use This Skill
 

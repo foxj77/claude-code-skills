@@ -1,10 +1,15 @@
+---
+name: helm-chart-review
+description: Use when performing code reviews of Helm charts, conducting security audits of charts, assessing chart quality and best practices, running automated chart analysis tools, or validating chart structure and organization
+---
+
 # Helm Chart Review
 
-Expert knowledge for reviewing Helm charts including security, quality, best practices, and code review guidelines.
+Review Helm charts including security, quality, best practices, and code review guidelines.
 
 ## Keywords
 
-helm, chart, review, security, quality, audit, best practices, code review, trivy, kubescape, polaris, pluto, lint
+helm, chart, review, reviewing, security, quality, auditing, audit, best practices, code review, trivy, kubescape, polaris, pluto, lint, linting, validating, validation, analyzing, analysis
 
 ## When to Use This Skill
 

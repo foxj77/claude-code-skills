@@ -1,10 +1,15 @@
+---
+name: flux-troubleshooting
+description: Use when Flux resources show Ready False, reconciliation errors appear in logs, deployments fail to sync from Git, HelmRelease installations fail, source artifacts are not being fetched, or image automation is not updating tags
+---
+
 # Flux CD Troubleshooting
 
-Expert knowledge for diagnosing and resolving Flux CD reconciliation failures and errors in GitOps environments.
+Diagnose and resolve Flux CD reconciliation failures and errors in GitOps environments.
 
 ## Keywords
 
-flux, fluxcd, troubleshooting, debug, error, failed, reconciliation, kustomization, helmrelease, source, gitrepository, ocirepository, artifact, health check
+flux, fluxcd, troubleshooting, debug, error, failed, failure, reconciliation, kustomization, helmrelease, source, gitrepository, ocirepository, artifact, health check, diagnose, resolve, fix
 
 ## When to Use This Skill
 
@@ -97,13 +102,8 @@ kubectl logs -n flux-system deploy/image-automation-controller
 
 ### Common OCI Issues
 ```bash
-# Check OCI repository status
 flux get sources oci -A
-
-# View OCI-specific errors
 kubectl logs -n flux-system deploy/source-controller | grep -i oci
-
-# Verify registry authentication
 kubectl get secret -n flux-system flux-system -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d
 ```
 
@@ -119,13 +119,8 @@ kubectl get secret -n flux-system flux-system -o jsonpath='{.data.\.dockerconfig
 
 ### Check Image Policies
 ```bash
-# View image policies
 flux get images policy -A
-
-# View image repositories
 flux get images repository -A
-
-# Check update status
 flux get images update -A
 ```
 
@@ -139,16 +134,9 @@ flux get images update -A
 ## Webhook/Notification Debugging
 
 ```bash
-# Check notification controller
 kubectl logs -n flux-system deploy/notification-controller
-
-# View alerts
 flux get alerts -A
-
-# View providers
 flux get alert-providers -A
-
-# Test webhook receiver
 kubectl logs -n flux-system deploy/notification-controller | grep -i receiver
 ```
 

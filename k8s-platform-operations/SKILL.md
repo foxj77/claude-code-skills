@@ -1,10 +1,15 @@
+---
+name: k8s-platform-operations
+description: Use when performing cluster health checks, responding to incidents and alerts, planning and managing capacity, conducting maintenance operations, managing backups and recovery, or creating and following runbooks
+---
+
 # Kubernetes Platform Operations
 
-Expert knowledge for day-2 operations of Kubernetes platforms including monitoring, incident response, capacity planning, and operational excellence.
+Manage day-2 operations of Kubernetes platforms including monitoring, incident response, capacity planning, and operational excellence.
 
 ## Keywords
 
-kubernetes, operations, monitoring, incident, capacity, maintenance, backup, recovery, health check, runbook, on-call, escalation, node, pod, troubleshooting
+kubernetes, operations, monitoring, incident, capacity, maintenance, backup, recovery, health check, runbook, on-call, escalation, node, pod, troubleshooting, performing, responding, planning, managing, conducting, creating
 
 ## When to Use This Skill
 
@@ -35,20 +40,13 @@ kubernetes, operations, monitoring, incident, capacity, maintenance, backup, rec
 
 ### Cluster Health Checks
 ```bash
-# Node health
 kubectl get nodes -o wide
 kubectl top nodes
-
-# System pods
 kubectl get pods -n kube-system
 kubectl get pods -n platform-system
-
-# API server health
 kubectl get --raw='/healthz?verbose'
 kubectl get --raw='/livez?verbose'
 kubectl get --raw='/readyz?verbose'
-
-# etcd health
 kubectl get --raw='/healthz/etcd'
 ```
 

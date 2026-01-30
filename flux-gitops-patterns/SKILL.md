@@ -1,10 +1,15 @@
+---
+name: flux-gitops-patterns
+description: Use when designing GitOps repository structure, setting up dependency chains between resources, implementing multi-environment deployments, configuring secrets management with Flux, setting up notifications and alerts, or optimizing reconciliation intervals
+---
+
 # Flux CD GitOps Patterns
 
-Expert knowledge for implementing GitOps best practices with Flux CD, including repository structure, dependency management, and deployment patterns.
+Implement GitOps best practices with Flux CD, including repository structure, dependency management, and deployment patterns.
 
 ## Keywords
 
-flux, fluxcd, gitops, patterns, architecture, repository, structure, kustomization, helmrelease, dependencies, multi-tenant, multi-cluster, secrets, sops
+flux, fluxcd, gitops, patterns, architecture, repository, structure, kustomization, helmrelease, dependencies, multi-tenant, multi-cluster, secrets, sops, designing, creating, deployment, deployments, notification, alerts, alerting, reconciliation, interval
 
 ## When to Use This Skill
 
@@ -97,11 +102,11 @@ spec:
 
 ### Deployment Order
 ```
-1. Flux System (bootstrapped)
-   └─> 2. Infrastructure (CRDs, operators)
-       ├─> 3a. Configs (ConfigMaps, Secrets)
-       └─> 3b. Monitoring (Prometheus, Grafana)
-           └─> 4. Apps (depends on all above)
+Flux System (bootstrapped)
+  └─> Infrastructure (CRDs, operators)
+      ├─> Configs (ConfigMaps, Secrets)
+      └─> Monitoring (Prometheus, Grafana)
+          └─> Apps (depends on all above)
 ```
 
 ## Source Configuration
@@ -121,7 +126,6 @@ spec:
   secretRef:
     name: flux-system
   ignore: |
-    # Ignore non-deployment files
     /*
     !/clusters/
     !/infrastructure/
@@ -153,9 +157,6 @@ metadata:
 spec:
   interval: 30m
   url: https://charts.bitnami.com/bitnami
-  # For OCI registries:
-  # type: oci
-  # url: oci://registry-1.docker.io/bitnamicharts
 ```
 
 ## Variable Substitution

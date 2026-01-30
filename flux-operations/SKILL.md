@@ -1,10 +1,15 @@
+---
+name: flux-operations
+description: Use when forcing immediate reconciliation, suspending reconciliation for maintenance, rolling back failed deployments, upgrading Flux components, managing drift detection, or performing multi-cluster Flux operations
+---
+
 # Flux CD Operations
 
-Expert knowledge for managing Flux CD reconciliation operations including suspend, resume, force sync, rollback, and multi-cluster management.
+Manage Flux CD reconciliation operations including suspend, resume, force sync, rollback, and multi-cluster management.
 
 ## Keywords
 
-flux, fluxcd, reconcile, suspend, resume, sync, rollback, drift, helmrelease, kustomization, gitops, operations, management, upgrade
+flux, fluxcd, reconcile, suspension, resumption, sync, rollback, rolling back, drift, helmrelease, kustomization, gitops, operations, management, upgrade, upgrading, failure, failed, debugging, debug
 
 ## When to Use This Skill
 
@@ -35,13 +40,8 @@ flux, fluxcd, reconcile, suspend, resume, sync, rollback, drift, helmrelease, ku
 
 ### Force Immediate Reconciliation
 ```bash
-# Kustomization with source refresh
 flux reconcile kustomization <name> -n <namespace> --with-source
-
-# HelmRelease with source refresh
 flux reconcile helmrelease <name> -n <namespace> --with-source
-
-# Source only
 flux reconcile source git <name> -n <namespace>
 flux reconcile source oci <name> -n <namespace>
 flux reconcile source helm <name> -n <namespace>
@@ -49,7 +49,6 @@ flux reconcile source helm <name> -n <namespace>
 
 ### Suspend Reconciliation
 ```bash
-# CLI method (immediate, not persisted in Git)
 flux suspend kustomization <name> -n <namespace>
 flux suspend helmrelease <name> -n <namespace>
 flux suspend source git <name> -n <namespace>
@@ -73,40 +72,27 @@ flux resume helmrelease <name> -n <namespace>
 
 ## Rollback Strategies
 
-### Strategy 1: Git Revert (Recommended)
+### Git Revert (Recommended)
 ```bash
-# Identify the bad commit
 git log --oneline -10
-
-# Revert it
 git revert <commit-sha>
 git push origin main
-
-# Force reconciliation
 flux reconcile kustomization flux-system --with-source
 ```
 
-### Strategy 2: Version Pin
+### Version Pin
 ```yaml
-# Pin HelmRelease to specific version
 spec:
   chart:
     spec:
-      version: "1.2.3"  # Exact working version
+      version: "1.2.3"
 ```
 
-### Strategy 3: Emergency Helm Rollback
+### Emergency Helm Rollback
 ```bash
-# 1. Suspend Flux first!
 flux suspend helmrelease <name> -n <namespace>
-
-# 2. List Helm history
 helm history <release-name> -n <namespace>
-
-# 3. Rollback to previous revision
 helm rollback <release-name> <revision> -n <namespace>
-
-# 4. Fix in Git, then resume
 flux resume helmrelease <name> -n <namespace>
 ```
 
@@ -130,10 +116,7 @@ spec:
 
 ### Check for Drift
 ```bash
-# View drift in HelmRelease status
 kubectl get helmrelease <name> -n <ns> -o jsonpath='{.status.drift}'
-
-# Manual diff
 flux diff kustomization <name> --path ./path/to/local
 ```
 
@@ -147,10 +130,7 @@ flux check
 
 ### Upgrade Flux
 ```bash
-# Update CLI
 brew upgrade fluxcd/tap/flux
-
-# Upgrade cluster components
 flux install --export > flux-system/gotk-components.yaml
 git add -A && git commit -m "Upgrade Flux to $(flux version --client)"
 git push
@@ -170,19 +150,13 @@ flux bootstrap github \
 
 ### Switch Context
 ```bash
-# List contexts
 kubectl config get-contexts
-
-# Switch context
 kubectl config use-context <cluster-name>
-
-# Verify Flux in new context
 flux check
 ```
 
 ### Cross-Cluster Source Reference
 ```yaml
-# In target cluster, reference source from management cluster
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
@@ -217,7 +191,7 @@ spec:
     enable: true
 ```
 
-### Disable Health Checks (Debugging)
+### Disable Health Checks
 ```yaml
 spec:
   install:

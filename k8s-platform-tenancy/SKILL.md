@@ -1,10 +1,15 @@
+---
+name: k8s-platform-tenancy
+description: Use when provisioning new tenant namespaces, configuring tenant RBAC roles and bindings, setting up resource quotas and limits, implementing network isolation between tenants, managing tenant lifecycle (onboarding/offboarding), or designing self-service provisioning
+---
+
 # Kubernetes Platform Tenancy
 
-Expert knowledge for managing multi-tenant Kubernetes platforms, namespace provisioning, RBAC, resource isolation, and tenant lifecycle management.
+Manage multi-tenant Kubernetes platforms, namespace provisioning, RBAC, resource isolation, and tenant lifecycle management.
 
 ## Keywords
 
-kubernetes, multi-tenant, namespace, tenancy, rbac, resource quota, limit range, network policy, isolation, onboarding, offboarding, self-service, platform engineering
+kubernetes, multi-tenant, namespace, tenancy, rbac, resource quota, limit range, network policy, isolation, onboarding, offboarding, self-service, platform engineering, provisioning, configuring, setting up, implementing, managing, designing
 
 ## When to Use This Skill
 

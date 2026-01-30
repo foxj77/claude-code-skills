@@ -1,10 +1,15 @@
+---
+name: k8s-security-hardening
+description: Use when implementing Pod Security Standards, hardening cluster security configuration, setting up network policies for zero-trust, configuring secrets management, implementing admission control policies, conducting security audits, or ensuring CIS benchmark compliance
+---
+
 # Kubernetes Security Hardening
 
-Expert knowledge for securing Kubernetes platforms including Pod Security Standards, network policies, secrets management, admission control, and compliance.
+Secure Kubernetes platforms including Pod Security Standards, network policies, secrets management, admission control, and compliance.
 
 ## Keywords
 
-kubernetes, security, hardening, pod security, pss, psa, network policy, rbac, secrets, encryption, audit, compliance, cis benchmark, admission control, kyverno, opa, gatekeeper
+kubernetes, security, hardening, pod security, pss, psa, network policy, rbac, secrets, encryption, audit, compliance, cis benchmark, admission control, kyverno, opa, gatekeeper, implementing, configuring, conducting, ensuring
 
 ## When to Use This Skill
 

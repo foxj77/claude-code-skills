@@ -1,10 +1,15 @@
+---
+name: helm-chart-development
+description: Use when creating new Helm charts from scratch, designing values.yaml schema and structure, implementing Helm template patterns, setting up chart directory structure, writing template helpers (_helpers.tpl), or creating values.schema.json validation
+---
+
 # Helm Chart Development
 
-Expert knowledge for creating and structuring Helm charts following best practices, including templating, values design, and chart architecture.
+Create and structure Helm charts following best practices, including templating, values design, and chart architecture.
 
 ## Keywords
 
-helm, chart, development, template, values, schema, kubernetes, packaging, create, scaffold, helpers, deployment
+helm, chart, development, templating, template, values, schema, kubernetes, packaging, creating, create, scaffold, scaffolding, helpers, deployment, deploying, writing, designing, structure
 
 ## When to Use This Skill
 
@@ -37,16 +42,16 @@ helm, chart, development, template, values, schema, kubernetes, packaging, creat
 ### Standard Layout
 ```
 mychart/
-├── Chart.yaml              # Chart metadata (required)
-├── Chart.lock              # Dependency lock file
-├── values.yaml             # Default values (required)
-├── values.schema.json      # JSON Schema for values validation
-├── README.md               # Chart documentation
-├── LICENSE                 # License file
-├── .helmignore             # Files to ignore when packaging
-├── templates/              # Template files
-│   ├── NOTES.txt           # Post-install notes
-│   ├── _helpers.tpl        # Template helpers
+├── Chart.yaml
+├── Chart.lock
+├── values.yaml
+├── values.schema.json
+├── README.md
+├── LICENSE
+├── .helmignore
+├── templates/
+│   ├── NOTES.txt
+│   ├── _helpers.tpl
 │   ├── deployment.yaml
 │   ├── service.yaml
 │   ├── ingress.yaml
@@ -56,8 +61,8 @@ mychart/
 │   ├── hpa.yaml
 │   └── tests/
 │       └── test-connection.yaml
-├── charts/                 # Dependency charts
-└── crds/                   # Custom Resource Definitions
+├── charts/
+└── crds/
 ```
 
 ## Chart.yaml
@@ -67,11 +72,10 @@ mychart/
 apiVersion: v2
 name: myapp
 description: A Helm chart for MyApp
-type: application  # or 'library'
-version: 1.0.0     # Chart version (SemVer)
-appVersion: "2.3.1" # Application version
+type: application
+version: 1.0.0
+appVersion: "2.3.1"
 
-# Optional metadata
 home: https://github.com/org/myapp
 icon: https://example.com/icon.png
 sources:
@@ -92,7 +96,6 @@ annotations:
       description: Initial release
   artifacthub.io/license: Apache-2.0
 
-# Dependencies
 dependencies:
   - name: postgresql
     version: "12.x.x"
