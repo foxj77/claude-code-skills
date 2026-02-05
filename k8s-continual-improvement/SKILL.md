@@ -108,10 +108,10 @@ kubectl top pods -A --no-headers | awk '{
 kubectl get deployments -A -o json | \
   jq -r '.items[] | select(.spec.replicas==0) | "\(.metadata.namespace)/\(.metadata.name)"'
 
-# Unmounted PVCs
-kubectl get pvc -A -o json | jq -r '.items[] | select(.status.phase=="Bound") | .metadata.name' > bound.txt
-kubectl get pods -A -o json | jq -r '.items[].spec.volumes[]?.persistentVolumeClaim.claimName' | sort -u > mounted.txt
-comm -23 <(sort bound.txt) <(sort mounted.txt)
+# Unmounted PVCs (no temp files)
+comm -23 \
+  <(kubectl get pvc -A -o json | jq -r '.items[] | select(.status.phase=="Bound") | .metadata.name' | sort) \
+  <(kubectl get pods -A -o json | jq -r '.items[].spec.volumes[]?.persistentVolumeClaim.claimName' | sort -u)
 ```
 
 ### Cost Reduction Strategies
@@ -227,47 +227,20 @@ dashboards:
 | Quarterly | Maturity assessment, OKRs |
 | Annually | Strategy, tech radar, budget |
 
-## Reporting Template
+## Reporting Format
 
-```markdown
-# Platform Report - ${MONTH} ${YEAR}
+Monthly platform reports should cover: **Availability** (SLO vs actual, error budget remaining), **Incidents** (count by severity, MTTR), **Cost** (total, per-tenant, month-over-month change), **Capacity** (CPU%, memory%), **Improvements delivered**, **Next month plan**
 
-## Availability
-- SLO: 99.9% | Actual: ${ACTUAL}%
-- Error Budget: ${REMAINING}% remaining
+## Common Mistakes
 
-## Incidents
-- P1: ${COUNT} | P2: ${COUNT}
-- MTTR: ${MTTR}
+| Mistake | Why It Fails | Instead |
+|---------|--------------|---------|
+| Setting SLOs without measuring SLIs first | SLO targets are guesses; error budgets are meaningless | Collect 2-4 weeks of SLI data, then set realistic SLOs |
+| Optimising cost by removing all headroom | First traffic spike causes outages; no capacity for rolling updates | Keep 20-30% headroom; optimise requests, not total capacity |
+| Tracking toil without an automation backlog | Toil is measured but never reduced; team burns out | Every toil item >2hrs/week gets a corresponding automation ticket |
+| Reporting platform maturity without tenant feedback | Self-assessment inflates scores; real pain points are missed | Include tenant NPS/survey data in every maturity review |
+| Right-sizing from a single day's metrics | Weekday traffic differs from weekend; batch jobs spike at month-end | Use 2+ weeks of data including peak periods for right-sizing decisions |
 
-## Cost
-- Total: ${TOTAL}
-- Per Tenant: ${AVG}
-- MoM: ${CHANGE}%
+## Improvement Backlog Format
 
-## Capacity
-- CPU: ${CPU}% | Memory: ${MEM}%
-
-## Improvements
-1. ${DELIVERED_1}
-2. ${DELIVERED_2}
-
-## Next Month
-1. ${PLANNED_1}
-2. ${PLANNED_2}
-```
-
-## Improvement Backlog Template
-
-```markdown
-## ${TITLE}
-
-**Category**: Performance | Reliability | Security | Cost | UX
-**Priority**: P1 | P2 | P3
-**Effort**: S | M | L | XL
-
-**Current**: ${PROBLEM}
-**Target**: ${GOAL}
-**Metrics**: Before: X → Target: Y
-**Dependencies**: ${DEPS}
-```
+For each item: **Title**, **Category** (Performance/Reliability/Security/Cost/UX), **Priority** (P1-P3), **Effort** (S/M/L/XL), **Current state**, **Target state**, **Metrics** (before → target), **Dependencies**
