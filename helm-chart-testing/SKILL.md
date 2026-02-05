@@ -94,7 +94,7 @@ metadata:
 spec:
   containers:
   - name: test
-    image: curlimages/curl:latest
+    image: curlimages/curl:8.7.1
     command:
     - sh
     - -c
@@ -110,11 +110,11 @@ spec:
 - One test pod tests one thing well
 - Exit code 0 = pass, non-zero = fail
 
-**Common test images:**
-- `curlimages/curl` - HTTP endpoint checks
-- `busybox` - Basic shell utilities
-- `bitnami/kubectl` - Kubernetes API queries
-- `postgres:alpine`, `mysql:alpine` - Database connectivity
+**Common test images (always pin to a specific tag, not `latest`):**
+- `curlimages/curl:8.7.1` - HTTP endpoint checks
+- `busybox:1.36` - Basic shell utilities
+- `bitnami/kubectl:1.29` - Kubernetes API queries
+- `postgres:16-alpine`, `mysql:8.0-oracle` - Database connectivity
 
 ## Test Examples
 
@@ -131,7 +131,7 @@ metadata:
 spec:
   containers:
   - name: api-test
-    image: curlimages/curl:latest
+    image: curlimages/curl:8.7.1
     command:
     - sh
     - -c
@@ -194,7 +194,7 @@ spec:
   serviceAccountName: {{ include "myapp.fullname" . }}-test-sa
   containers:
   - name: kubectl-test
-    image: bitnami/kubectl:latest
+    image: bitnami/kubectl:1.29
     command:
     - sh
     - -c
@@ -255,7 +255,7 @@ Set limits to prevent exhaustion:
 spec:
   containers:
   - name: test
-    image: curlimages/curl:latest
+    image: curlimages/curl:8.7.1
     resources:
       requests:
         cpu: 100m
