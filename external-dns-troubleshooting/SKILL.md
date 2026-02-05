@@ -21,6 +21,12 @@ external-dns, externaldns, dns, records, route53, azure-dns, cloudflare, google-
 - DNS propagation seems broken after a provider migration
 - ExternalDNS is running but doing nothing (no changes detected)
 
+### When NOT to Use
+
+- DNS records exist but TLS certs are failing → use [cert-manager-troubleshooting](../cert-manager-troubleshooting)
+- DNS is working but the Service has no endpoints → use [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting)
+- ExternalDNS config is delivered by Flux and not appearing → use [flux-troubleshooting](../flux-troubleshooting)
+
 ## Related Skills
 
 - [cert-manager-troubleshooting](../cert-manager-troubleshooting) - TLS certificates depend on DNS
@@ -95,58 +101,23 @@ kubectl get deploy/external-dns -n external-dns -o jsonpath='{.spec.template.spe
 
 ## Section 2: Provider Authentication
 
-### AWS Route53
+> **Full provider auth reference:** See [provider-authentication.md](../_shared/references/provider-authentication.md) for generic diagnostic steps, auth method tables, and provider-specific issue matrices for AWS, Azure, GCP, Vault, and CloudFlare.
+
+The commands below are ExternalDNS-specific. For general auth debugging patterns, use the shared reference.
+
 ```bash
-# Check if using IRSA (IAM Roles for Service Accounts)
-kubectl get sa external-dns -n external-dns -o jsonpath='{.metadata.annotations.eks\.amazonaws\.com/role-arn}'
-
-# Check if credentials secret exists
-kubectl get secret external-dns -n external-dns 2>/dev/null
-
-# Verify from logs
-kubectl logs -n external-dns deploy/external-dns --tail=100 | grep -iE 'credential|auth|forbidden|access denied|assume role'
+# Quick auth check — grep ExternalDNS logs for auth failures
+kubectl logs -n external-dns deploy/external-dns --tail=200 | grep -iE 'credential|auth|forbidden|access denied|assume role|sts|azure|authorization|cloudflare|google|permission'
 ```
 
-**Required IAM permissions for Route53:**
-- `route53:ChangeResourceRecordSets`
-- `route53:ListResourceRecordSets`
-- `route53:ListHostedZones`
-- `route53:ListHostedZonesByName`
+### Required Provider Permissions (ExternalDNS-Specific)
 
-### Azure DNS
-```bash
-# Check for Azure identity (Workload Identity or aad-pod-identity)
-kubectl get pods -n external-dns -o jsonpath='{.items[0].metadata.labels}' | jq .
-
-# Check azure.json config (mounted as secret or config)
-kubectl get deploy/external-dns -n external-dns -o json | jq '.spec.template.spec.volumes'
-
-# Logs for Azure errors
-kubectl logs -n external-dns deploy/external-dns --tail=100 | grep -iE 'azure|authorization|subscription|resource group'
-```
-
-**Required Azure permissions:**
-- `DNS Zone Contributor` on the DNS zone resource group
-- Or custom role with `Microsoft.Network/dnsZones/*` actions
-
-### CloudFlare
-```bash
-# Check for API token secret
-kubectl get secret cloudflare-api-token -n external-dns 2>/dev/null
-
-# Logs for CloudFlare errors
-kubectl logs -n external-dns deploy/external-dns --tail=100 | grep -iE 'cloudflare|api token|forbidden|zone'
-```
-
-### Google Cloud DNS
-```bash
-# Check for GCP service account key
-kubectl get secret external-dns -n external-dns 2>/dev/null
-kubectl get deploy/external-dns -n external-dns -o json | jq '.spec.template.spec.volumes[] | select(.secret)'
-
-# Logs for GCP errors
-kubectl logs -n external-dns deploy/external-dns --tail=100 | grep -iE 'google|gcp|project|permission|iam'
-```
+| Provider | Required Permissions |
+|----------|---------------------|
+| AWS Route53 | `route53:ChangeResourceRecordSets`, `route53:ListResourceRecordSets`, `route53:ListHostedZones`, `route53:ListHostedZonesByName` |
+| Azure DNS | `DNS Zone Contributor` on the zone resource group (or custom role with `Microsoft.Network/dnsZones/*`) |
+| CloudFlare | API token with Zone:DNS:Edit on target zones |
+| Google Cloud DNS | `roles/dns.admin` on the project (or `dns.changes.create`, `dns.resourceRecordSets.*`, `dns.managedZones.list`) |
 
 ---
 
@@ -291,6 +262,16 @@ kubectl logs -n external-dns deploy/external-dns --tail=300 | grep -iE 'ownershi
 | **CloudFlare** | Zone ID vs name | API token must have access to the specific zone |
 | **Google Cloud DNS** | Project required | Must specify `--google-project` |
 | **Google Cloud DNS** | Managed zone name | Zone names differ from domain names |
+
+---
+
+## MCP Tools Available
+
+When the appropriate MCP servers are connected, prefer these over raw kubectl where available:
+
+- `mcp__flux-operator-mcp__get_kubernetes_resources` - Query ExternalDNS deployment, pods, services, ingresses
+- `mcp__flux-operator-mcp__get_kubernetes_logs` - Retrieve ExternalDNS pod logs
+- `mcp__flux-operator-mcp__get_kubernetes_metrics` - Check ExternalDNS resource consumption
 
 ---
 

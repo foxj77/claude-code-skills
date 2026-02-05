@@ -21,6 +21,12 @@ external-secrets, externalsecret, secretstore, clustersecretstore, eso, vault, a
 - Application pods fail because expected secrets are missing
 - Provider-specific connectivity or permission issues
 
+### When NOT to Use
+
+- Secrets exist but TLS certs are not being issued → use [cert-manager-troubleshooting](../cert-manager-troubleshooting)
+- Secret data is correct but the consuming pod fails → use [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting)
+- ESO resources are delivered by Flux and not appearing → use [flux-troubleshooting](../flux-troubleshooting)
+
 ## Related Skills
 
 - [kyverno-troubleshooting](../kyverno-troubleshooting) - Policies may block Secret creation
@@ -131,49 +137,31 @@ kubectl get externalsecret ${ES_NAME} -n ${NS} -o jsonpath='{.spec.secretStoreRe
 
 ## Section 3: Provider Authentication
 
-### AWS Secrets Manager
+> **Full provider auth reference:** See [provider-authentication.md](../_shared/references/provider-authentication.md) for generic diagnostic steps, auth method tables, and provider-specific issue matrices for AWS, Azure, GCP, Vault, and CloudFlare.
+
+The commands and tables below are ESO-specific. For general auth debugging patterns, use the shared reference.
+
 ```bash
-# Check if using IRSA
-kubectl get sa -n external-secrets -o json | jq '.items[] | {name: .metadata.name, arn: .metadata.annotations["eks.amazonaws.com/role-arn"]}'
-
-# Check for static credentials secret
-kubectl get secret awssm-secret -n external-secrets 2>/dev/null
-
-# Logs for AWS errors
-kubectl logs -n external-secrets deploy/external-secrets --tail=200 | grep -iE 'aws|credential|sts|assume|forbidden|access denied'
+# Quick auth check — grep ESO logs for auth failures
+kubectl logs -n external-secrets deploy/external-secrets --tail=200 | grep -iE 'credential|auth|forbidden|access denied|sts|azure|keyvault|vault|google|permission|seal'
 ```
 
-**Required IAM permissions:**
-- `secretsmanager:GetSecretValue`
-- `secretsmanager:ListSecrets` (for `find` operations)
-- `sts:AssumeRole` (if using cross-account)
+### Required Provider Permissions (ESO-Specific)
 
-### Azure Key Vault
+| Provider | Required Permissions |
+|----------|---------------------|
+| AWS Secrets Manager | `secretsmanager:GetSecretValue`, `secretsmanager:ListSecrets` (for `find`), `sts:AssumeRole` (cross-account) |
+| Azure Key Vault | Key Vault Secrets User (or Key Vault Reader); Key Vault Certificates User for certs |
+| HashiCorp Vault | Policy granting `read` on the secret path; K8s auth role allowing the SA and namespace |
+| GCP Secret Manager | `roles/secretmanager.secretAccessor` on the project or secret |
+
+### Vault-Specific Checks (ESO)
+
+ESO's Vault integration has unique failure modes beyond standard auth:
+
 ```bash
-# Check for Workload Identity annotations
-kubectl get sa -n ${NS} -o json | jq '.items[] | {name: .metadata.name, clientId: .metadata.annotations["azure.workload.identity/client-id"]}'
-
-# Check for client secret
-kubectl get secret azure-secret -n ${NS} 2>/dev/null
-
-# Logs for Azure errors
-kubectl logs -n external-secrets deploy/external-secrets --tail=200 | grep -iE 'azure|keyvault|vault|authorization|tenant|client'
-```
-
-**Required Azure permissions:**
-- Key Vault Secrets User (or Key Vault Reader) on the vault
-- For certificates: Key Vault Certificates User
-
-### HashiCorp Vault
-```bash
-# Check Vault address in SecretStore
-kubectl get secretstore -n ${NS} -o json | jq '.items[].spec.provider.vault'
-
-# Check auth method (kubernetes, token, approle)
-kubectl get secretstore -n ${NS} -o json | jq '.items[].spec.provider.vault.auth'
-
-# Logs for Vault errors
-kubectl logs -n external-secrets deploy/external-secrets --tail=200 | grep -iE 'vault|token|auth|permission|seal|lease'
+# Check Vault address and auth method in SecretStore
+kubectl get secretstore -n ${NS} -o json | jq '.items[].spec.provider.vault | {server, auth: (.auth | keys)}'
 ```
 
 | Vault Issue | Symptom | Fix |
@@ -183,15 +171,6 @@ kubectl logs -n external-secrets deploy/external-secrets --tail=200 | grep -iE '
 | Wrong mount path | "no handler for route" | Fix `mountPath` in SecretStore spec |
 | Wrong KV version | Empty data or wrong structure | Set `version: "v2"` or `version: "v1"` in provider spec |
 | K8s auth role wrong | "invalid role" | Verify role exists in Vault and allows the service account |
-
-### GCP Secret Manager
-```bash
-# Check for Workload Identity or key file
-kubectl get sa -n external-secrets -o json | jq '.items[] | {name: .metadata.name, gcp: .metadata.annotations["iam.gke.io/gcp-service-account"]}'
-
-# Logs for GCP errors
-kubectl logs -n external-secrets deploy/external-secrets --tail=200 | grep -iE 'google|gcp|secret manager|permission|project'
-```
 
 ---
 
@@ -296,6 +275,16 @@ kubectl logs -n external-secrets deploy/external-secrets --tail=200 | grep -iE '
 | Secrets stale after provider update | Refresh interval too long | `status.refreshTime` is old |
 | Webhook rejection on create | Webhook cert expired | Restart cert-controller, check webhook config |
 | All secrets in one namespace failing | Namespace-scoped SecretStore issue | Other namespaces using ClusterSecretStore work |
+
+---
+
+## MCP Tools Available
+
+When the appropriate MCP servers are connected, prefer these over raw kubectl where available:
+
+- `mcp__flux-operator-mcp__get_kubernetes_resources` - Query ExternalSecrets, SecretStores, and Kubernetes Secrets
+- `mcp__flux-operator-mcp__get_kubernetes_logs` - Retrieve ESO controller and webhook logs
+- `mcp__flux-operator-mcp__get_kubernetes_metrics` - Check ESO resource consumption
 
 ---
 

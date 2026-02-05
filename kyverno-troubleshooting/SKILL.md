@@ -22,6 +22,12 @@ kyverno, policy, clusterpolicy, validate, mutate, generate, cleanup, admission, 
 - Policies work in `Audit` mode but fail in `Enforce` mode
 - Background scan results are missing or incomplete
 
+### When NOT to Use
+
+- Resource creation fails but the error is not from an admission webhook → use [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting)
+- Kyverno policies are delivered by Flux and not appearing → use [flux-troubleshooting](../flux-troubleshooting)
+- Pod Security Standards are enforced by the built-in PodSecurity admission (not Kyverno) → use [k8s-security-hardening](../k8s-security-hardening)
+
 ## Related Skills
 
 - [kro-troubleshooting](../kro-troubleshooting) - Policies may block kro-created resources
@@ -373,6 +379,16 @@ kyverno apply /path/to/policies/ --resource resource.yaml
 # Generate policy report for existing resources
 kyverno apply policy.yaml --cluster
 ```
+
+---
+
+## MCP Tools Available
+
+When the appropriate MCP servers are connected, prefer these over raw kubectl where available:
+
+- `mcp__flux-operator-mcp__get_kubernetes_resources` - Query ClusterPolicies, Policies, PolicyReports, webhooks
+- `mcp__flux-operator-mcp__get_kubernetes_logs` - Retrieve Kyverno admission and background controller logs
+- `mcp__flux-operator-mcp__get_kubernetes_metrics` - Check Kyverno resource consumption
 
 ---
 

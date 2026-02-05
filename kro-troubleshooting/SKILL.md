@@ -21,6 +21,12 @@ kro, resource-group, resourcegroup, instance, dag, dependency, cel, composition,
 - kro controller logs show reconciliation failures
 - Status fields are not being populated on instances
 
+### When NOT to Use
+
+- A child resource created by kro is failing (e.g., pod crash, image pull error) → use the skill for that resource type (e.g., [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting))
+- Kyverno policies are blocking kro-created resources → use [kyverno-troubleshooting](../kyverno-troubleshooting)
+- kro ResourceGroup manifests are delivered by Flux and not appearing → use [flux-troubleshooting](../flux-troubleshooting)
+
 ## Related Skills
 
 - [kyverno-troubleshooting](../kyverno-troubleshooting) - Policies may block kro-created resources
@@ -313,6 +319,16 @@ kubectl get crd resourcegroups.kro.run -o jsonpath='{.spec.versions[*].name}'
 | CRD schema changed | ResourceGroups fail validation after upgrade | Update ResourceGroup specs to match new schema |
 | API version bump | Old resources not recognized | Apply conversion webhook or recreate resources |
 | New required fields | Existing ResourceGroups invalid | Add newly required fields to existing specs |
+
+---
+
+## MCP Tools Available
+
+When the appropriate MCP servers are connected, prefer these over raw kubectl where available:
+
+- `mcp__flux-operator-mcp__get_kubernetes_resources` - Query ResourceGroups, instances, child resources, and CRDs
+- `mcp__flux-operator-mcp__get_kubernetes_logs` - Retrieve kro controller manager logs
+- `mcp__flux-operator-mcp__get_kubernetes_metrics` - Check kro resource consumption
 
 ---
 

@@ -21,6 +21,12 @@ cert-manager, certificate, tls, ssl, https, letsencrypt, acme, issuer, clusteris
 - Ingress TLS annotations are not triggering certificate creation
 - Certificate renewal is not happening before expiry
 
+### When NOT to Use
+
+- DNS records are not being created (even if needed for DNS-01 challenges) → use [external-dns-troubleshooting](../external-dns-troubleshooting)
+- Issuer credentials come from an external store and the store is failing → use [external-secrets-troubleshooting](../external-secrets-troubleshooting)
+- cert-manager resources are delivered by Flux and not appearing → use [flux-troubleshooting](../flux-troubleshooting)
+
 ## Related Skills
 
 - [external-dns-troubleshooting](../external-dns-troubleshooting) - DNS records required for DNS-01 challenges
@@ -333,6 +339,16 @@ kubectl get secret ${SECRET} -n ${NS} -o jsonpath='{.data.tls\.crt}' | base64 -d
 
 ---
 
+## MCP Tools Available
+
+When the appropriate MCP servers are connected, prefer these over raw kubectl where available:
+
+- `mcp__flux-operator-mcp__get_kubernetes_resources` - Query Certificates, CertificateRequests, Orders, Challenges, Issuers
+- `mcp__flux-operator-mcp__get_kubernetes_logs` - Retrieve cert-manager controller, webhook, and cainjector logs
+- `mcp__flux-operator-mcp__get_kubernetes_metrics` - Check cert-manager resource consumption
+
+---
+
 ## Common Mistakes
 
 | Mistake | Why It Fails | Instead |
@@ -347,7 +363,7 @@ kubectl get secret ${SECRET} -n ${NS} -o jsonpath='{.data.tls\.crt}' | base64 -d
 ## Behavioural Guidelines
 
 1. **Follow the resource chain** — Certificate → CertificateRequest → Order → Challenge. Diagnose at the deepest failing layer.
-2. **Never decode TLS private keys** — Only examine certificate metadata (dates, SANs, issuer). Never display `tls.key` contents.
+2. **Never display raw private key contents** — Examining certificate metadata (dates, SANs, issuer) is safe. Modulus comparison (`openssl rsa -noout -modulus`) for cert/key matching is acceptable, but never print full `tls.key` data.
 3. **Check the Issuer first** — If the Issuer is `Ready: False`, no Certificate can be issued.
 4. **Distinguish staging from production** — Staging certs are not browser-trusted but have much higher rate limits for testing.
 5. **Watch for rate limits** — Let's Encrypt production has strict limits. Check `kubectl describe order` for rate limit messages before retrying.
