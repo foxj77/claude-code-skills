@@ -22,6 +22,7 @@ kubernetes, operations, monitoring, incident, capacity, maintenance, backup, rec
 
 ## Related Skills
 
+- [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting) - Namespace-scoped diagnosis
 - [k8s-platform-tenancy](../k8s-platform-tenancy) - Tenant management
 - [k8s-security-hardening](../k8s-security-hardening) - Security operations
 - [k8s-continual-improvement](../k8s-continual-improvement) - SLOs and metrics
@@ -94,25 +95,9 @@ L3 (Platform Lead) → Critical impact
 Management (if customer-facing outage)
 ```
 
-### On-Call Handoff Template
-```markdown
-## On-Call Handoff - ${DATE}
+### On-Call Handoff Format
 
-### Active Issues
-- [P2] Issue description - Status
-
-### Recent Changes
-- ${CHANGE_DESCRIPTION} - ${TIME}
-
-### Upcoming Maintenance
-- ${MAINTENANCE} - ${SCHEDULED_TIME}
-
-### Watchlist
-- ${ITEM_TO_MONITOR}
-
-### Notes
-- ${ADDITIONAL_CONTEXT}
-```
+Include: **Active Issues** (severity + status), **Recent Changes** (what + when), **Upcoming Maintenance**, **Watchlist**, **Notes**
 
 ## Common Runbooks
 
@@ -255,37 +240,19 @@ velero schedule create daily-platform \
 - [ ] Cost optimization review
 - [ ] Tenant usage reports
 
-## Post-Incident Review Template
-```markdown
-## Incident Review: ${INCIDENT_ID}
+## Post-Incident Review Format
 
-### Summary
-- **Duration**: ${START} - ${END}
-- **Severity**: P${LEVEL}
-- **Impact**: ${IMPACT_DESCRIPTION}
+Structure reviews with: **Summary** (duration, severity, impact), **Timeline** (time + event table), **Root Cause**, **What Went Well**, **What Could Be Improved**, **Action Items** (action, owner, due date)
 
-### Timeline
-| Time | Event |
-|------|-------|
-| HH:MM | Alert fired |
-| HH:MM | Investigation started |
-| HH:MM | Root cause identified |
-| HH:MM | Service restored |
+## Common Mistakes
 
-### Root Cause
-${ROOT_CAUSE}
-
-### What Went Well
-- ${POSITIVE_1}
-
-### What Could Be Improved
-- ${IMPROVEMENT_1}
-
-### Action Items
-| Action | Owner | Due |
-|--------|-------|-----|
-| ${ACTION} | ${OWNER} | ${DATE} |
-```
+| Mistake | Why It Fails | Instead |
+|---------|--------------|---------|
+| Draining a node without cordoning first | New pods schedule onto the node during drain | Always `kubectl cordon` before `kubectl drain` |
+| Skipping the COMMUNICATE step in incidents | Stakeholders make assumptions; duplicate investigations start | Update status channel before deep-diving |
+| Running etcd backup without verifying restore procedure | Backup may be corrupt or incompatible; you won't know until you need it | Test restore to a non-production cluster periodically |
+| Applying certificate rotation without checking dependent services | Services using the old cert break silently | Inventory cert consumers before rotation |
+| Ignoring "Warning" events because pods are Running | Warnings often precede failures (e.g., mounting issues, throttling) | Review `kubectl get events` as part of daily checks |
 
 ## MCP Tools
 
