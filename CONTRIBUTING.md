@@ -16,6 +16,11 @@ Thank you for your interest in contributing to this skills collection!
 
 2. **Follow the SKILL.md template:**
    ```markdown
+   ---
+   name: skill-name
+   description: Use when [scenario 1], [scenario 2], or [scenario 3]
+   ---
+
    # Skill Name
 
    Brief description of what this skill provides.
