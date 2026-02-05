@@ -32,7 +32,6 @@ external-secrets, externalsecret, secretstore, clustersecretstore, eso, vault, a
 - [kyverno-troubleshooting](../kyverno-troubleshooting) - Policies may block Secret creation
 - [cert-manager-troubleshooting](../cert-manager-troubleshooting) - TLS certs stored as secrets
 - [external-dns-troubleshooting](../external-dns-troubleshooting) - Shared provider auth patterns
-- [kro-troubleshooting](../kro-troubleshooting) - Resource groups may include ExternalSecrets
 - [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting) - General namespace diagnosis
 - [k8s-security-hardening](../k8s-security-hardening) - Secrets management and access control
 - [flux-troubleshooting](../flux-troubleshooting) - GitOps delivery of ESO resources

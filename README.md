@@ -39,7 +39,6 @@ These skills provide expert knowledge that Claude Code can leverage when assisti
 | [external-dns-troubleshooting](./external-dns-troubleshooting/) | Diagnosing ExternalDNS record sync failures |
 | [external-secrets-troubleshooting](./external-secrets-troubleshooting/) | Diagnosing External Secrets Operator sync issues |
 | [cert-manager-troubleshooting](./cert-manager-troubleshooting/) | Diagnosing certificate issuance and renewal failures |
-| [kro-troubleshooting](./kro-troubleshooting/) | Diagnosing kro ResourceGroup and instance failures |
 | [kyverno-troubleshooting](./kyverno-troubleshooting/) | Diagnosing Kyverno policy enforcement and webhook issues |
 
 ### Helm Charts

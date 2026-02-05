@@ -32,7 +32,6 @@ cert-manager, certificate, tls, ssl, https, letsencrypt, acme, issuer, clusteris
 - [external-dns-troubleshooting](../external-dns-troubleshooting) - DNS records required for DNS-01 challenges
 - [external-secrets-troubleshooting](../external-secrets-troubleshooting) - Issuer credentials from external stores
 - [kyverno-troubleshooting](../kyverno-troubleshooting) - Policies may block cert-manager resources
-- [kro-troubleshooting](../kro-troubleshooting) - Resource groups may include Certificates
 - [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting) - General namespace diagnosis
 - [k8s-platform-operations](../k8s-platform-operations) - Cluster-wide operations
 - [flux-troubleshooting](../flux-troubleshooting) - GitOps delivery of cert-manager resources

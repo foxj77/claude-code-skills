@@ -30,7 +30,6 @@ kyverno, policy, clusterpolicy, validate, mutate, generate, cleanup, admission, 
 
 ## Related Skills
 
-- [kro-troubleshooting](../kro-troubleshooting) - Policies may block kro-created resources
 - [cert-manager-troubleshooting](../cert-manager-troubleshooting) - Policies may affect certificate resources
 - [external-secrets-troubleshooting](../external-secrets-troubleshooting) - Policies may block secret creation
 - [external-dns-troubleshooting](../external-dns-troubleshooting) - Policies may restrict annotations
