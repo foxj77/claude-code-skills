@@ -8,6 +8,7 @@ These skills provide expert knowledge that Claude Code can leverage when assisti
 
 - **Flux CD GitOps** - Troubleshooting, operations, and patterns
 - **Kubernetes Platform Engineering** - Multi-tenancy, operations, security, and continual improvement
+- **Kubernetes Ecosystem Tools** - Troubleshooting ExternalDNS, External Secrets, cert-manager, kro, and Kyverno
 - **Helm Charts** - Development, maintenance, and review
 
 ## Skills Index
@@ -30,6 +31,16 @@ These skills provide expert knowledge that Claude Code can leverage when assisti
 | [k8s-security-redteam](./k8s-security-redteam/) | Penetration testing and security assessment |
 | [k8s-continual-improvement](./k8s-continual-improvement/) | SLOs, FinOps, and platform maturity |
 | [k8s-namespace-troubleshooting](./k8s-namespace-troubleshooting/) | Namespace-scoped workload diagnosis and remediation |
+
+### Kubernetes Ecosystem Tools
+
+| Skill | Description |
+|-------|-------------|
+| [external-dns-troubleshooting](./external-dns-troubleshooting/) | Diagnosing ExternalDNS record sync failures |
+| [external-secrets-troubleshooting](./external-secrets-troubleshooting/) | Diagnosing External Secrets Operator sync issues |
+| [cert-manager-troubleshooting](./cert-manager-troubleshooting/) | Diagnosing certificate issuance and renewal failures |
+| [kro-troubleshooting](./kro-troubleshooting/) | Diagnosing kro ResourceGroup and instance failures |
+| [kyverno-troubleshooting](./kyverno-troubleshooting/) | Diagnosing Kyverno policy enforcement and webhook issues |
 
 ### Helm Charts
 
