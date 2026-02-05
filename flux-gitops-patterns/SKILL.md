@@ -26,6 +26,18 @@ flux, fluxcd, gitops, patterns, architecture, repository, structure, kustomizati
 - [flux-operations](../flux-operations) - Day-to-day operations
 - [k8s-platform-tenancy](../k8s-platform-tenancy) - Multi-tenant patterns
 
+## Quick Reference
+
+| Task | Pattern/Command |
+|------|----------------|
+| Monorepo layout | `clusters/`, `infrastructure/`, `apps/` directories |
+| Multi-repo layout | Separate repos per team/concern |
+| Component layout | `namespace.yaml`, `repository.yaml`, `release.yaml` |
+| Force sync | `flux reconcile ks flux-system --with-source` |
+| Variable substitution | `spec.postBuild.substitute` / `substituteFrom` |
+| Encrypt secrets | SOPS with `spec.decryption.provider: sops` |
+| Set up alerts | `Alert` + `Provider` in `notification.toolkit.fluxcd.io` |
+
 ## Repository Patterns
 
 ### Monorepo (Recommended for Small Teams)
