@@ -25,6 +25,9 @@ kubernetes, slo, sli, sla, error budget, cost optimization, finops, capacity, pe
 
 - [k8s-platform-operations](../k8s-platform-operations) - SLI data sources
 - [k8s-platform-tenancy](../k8s-platform-tenancy) - Cost allocation
+- [k8s-security-hardening](../k8s-security-hardening) - Security posture baselines
+- [k8s-security-redteam](../k8s-security-redteam) - Findings backlog input
+- [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting) - Per-namespace diagnostics
 - [flux-gitops-patterns](../flux-gitops-patterns) - Change management
 
 ## Quick Reference

@@ -25,6 +25,9 @@ kubernetes, security, hardening, pod security, pss, psa, network policy, rbac, s
 
 - [k8s-platform-tenancy](../k8s-platform-tenancy) - Multi-tenant security
 - [k8s-security-redteam](../k8s-security-redteam) - Test your defenses
+- [k8s-platform-operations](../k8s-platform-operations) - Day-to-day security operations
+- [k8s-continual-improvement](../k8s-continual-improvement) - Security posture metrics
+- [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting) - Diagnose policy violations
 - [helm-chart-review](../helm-chart-review) - Chart security review
 - [Shared: Pod Security Context](../_shared/references/pod-security-context.md)
 - [Shared: Network Policies](../_shared/references/network-policies.md)

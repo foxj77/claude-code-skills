@@ -26,6 +26,7 @@ kubernetes, operations, monitoring, incident, capacity, maintenance, backup, rec
 - [k8s-platform-tenancy](../k8s-platform-tenancy) - Tenant management
 - [k8s-security-hardening](../k8s-security-hardening) - Security operations
 - [k8s-continual-improvement](../k8s-continual-improvement) - SLOs and metrics
+- [k8s-security-redteam](../k8s-security-redteam) - Validate security posture
 - [flux-troubleshooting](../flux-troubleshooting) - GitOps troubleshooting
 
 ## Quick Reference

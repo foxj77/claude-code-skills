@@ -26,6 +26,7 @@ kubernetes, namespace, troubleshoot, troubleshooting, debug, diagnose, investiga
 - [k8s-security-hardening](../k8s-security-hardening) - Security context and policy issues
 - [k8s-platform-tenancy](../k8s-platform-tenancy) - Resource quotas and limit ranges
 - [k8s-continual-improvement](../k8s-continual-improvement) - SLOs and capacity planning
+- [k8s-security-redteam](../k8s-security-redteam) - Security-related namespace issues
 - [flux-troubleshooting](../flux-troubleshooting) - GitOps reconciliation failures
 - [Shared: Pod Security Context](../_shared/references/pod-security-context.md)
 - [Shared: Network Policies](../_shared/references/network-policies.md)

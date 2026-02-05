@@ -25,6 +25,8 @@ kubernetes, multi-tenant, namespace, tenancy, rbac, resource quota, limit range,
 - [k8s-security-hardening](../k8s-security-hardening) - Security controls for tenants
 - [k8s-platform-operations](../k8s-platform-operations) - Day-to-day operations
 - [k8s-continual-improvement](../k8s-continual-improvement) - SLOs and cost allocation
+- [k8s-security-redteam](../k8s-security-redteam) - Test tenant isolation
+- [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting) - Namespace-scoped diagnosis
 - [Shared: Pod Security Context](../_shared/references/pod-security-context.md)
 - [Shared: Network Policies](../_shared/references/network-policies.md)
 - [Shared: RBAC Patterns](../_shared/references/rbac-patterns.md)

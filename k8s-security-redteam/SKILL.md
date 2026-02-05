@@ -26,6 +26,9 @@ kubernetes, security, red team, penetration testing, pentest, attack, exploiting
 
 - [k8s-security-hardening](../k8s-security-hardening) - What defenses to test
 - [k8s-platform-tenancy](../k8s-platform-tenancy) - Tenant isolation to test
+- [k8s-platform-operations](../k8s-platform-operations) - Incident response after findings
+- [k8s-continual-improvement](../k8s-continual-improvement) - Track security debt
+- [k8s-namespace-troubleshooting](../k8s-namespace-troubleshooting) - Diagnose exploited namespaces
 - [Shared: RBAC Patterns](../_shared/references/rbac-patterns.md) - RBAC to audit
 
 ## Quick Reference
