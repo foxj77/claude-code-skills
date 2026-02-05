@@ -193,7 +193,8 @@ resources:
   - aescbc:
       keys:
       - name: key1
-        secret: <base64-key>
+        # Generate with: head -c 32 /dev/urandom | base64
+        secret: <generate-and-insert-base64-key>
   - identity: {}
 ```
 
@@ -292,6 +293,16 @@ kubectl logs -l app=kube-bench
 - [ ] Resource quotas applied
 - [ ] RBAC scoped to namespace
 - [ ] SA tokens disabled by default
+
+## Common Mistakes
+
+| Mistake | Why It Fails | Instead |
+|---------|--------------|---------|
+| Enforcing `restricted` PSS without auditing first | All non-compliant pods are rejected immediately, causing outage | Start with `audit` + `warn` modes, fix violations, then switch to `enforce` |
+| Adding NetworkPolicy allow rules without a default-deny | Allow rules are additive; without deny-all, unlisted traffic still flows | Always apply default-deny-all first, then add explicit allows |
+| Using `cluster-admin` ClusterRoleBinding for automation service accounts | Any compromise of that SA gives full cluster access | Create scoped Roles with minimum required permissions |
+| Encrypting secrets at rest but leaving etcd endpoint exposed | Attacker can read etcd directly, bypassing API server encryption | Restrict etcd access to API server IPs only + mTLS |
+| Signing images but not enforcing verification in admission | Signed images exist but unsigned images are still accepted | Deploy Kyverno/OPA policy that rejects unverified images |
 
 ## MCP Tools
 
