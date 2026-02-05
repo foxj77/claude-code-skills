@@ -31,7 +31,7 @@ kubernetes, operations, monitoring, incident, capacity, maintenance, backup, rec
 
 | Task | Command |
 |------|---------|
-| Cluster health | `kubectl get nodes && kubectl get cs` |
+| Cluster health | `kubectl get nodes && kubectl get --raw='/healthz?verbose'` |
 | All pods status | `kubectl get pods -A \| grep -v Running` |
 | Resource usage | `kubectl top nodes && kubectl top pods -A` |
 | Recent events | `kubectl get events -A --sort-by='.lastTimestamp'` |
