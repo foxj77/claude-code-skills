@@ -1,6 +1,6 @@
 ---
 name: k8s-namespace-troubleshooting
-description: Use when a user reports a problem in a specific namespace, when investigating unhealthy workloads in a namespace, when diagnosing pod failures or restarts, when checking namespace events and resource status, when performing end-to-end namespace health assessment, or when triaging application issues inside Kubernetes
+description: Use when a user reports a problem in a specific namespace, when investigating unhealthy workloads or pod failures, when checking namespace events and resource status, or when triaging application issues inside Kubernetes
 ---
 
 # Kubernetes Namespace Troubleshooting
@@ -197,23 +197,16 @@ kubectl get pods -n ${NS} -o jsonpath='{range .items[*]}{.spec.nodeName}{"\n"}{e
 
 ### 1.9 Application Logs
 ```bash
-# Logs from all pods in the namespace (last 100 lines each)
+# Current logs, previous logs, and error grep — single pass over all pods
 for pod in $(kubectl get pods -n ${NS} -o jsonpath='{.items[*].metadata.name}'); do
   echo "=== ${pod} ==="
   kubectl logs -n ${NS} ${pod} --all-containers --tail=100 2>&1
-done
-
-# Previous container logs (for crashed/restarted containers)
-for pod in $(kubectl get pods -n ${NS} -o jsonpath='{.items[*].metadata.name}'); do
-  echo "=== ${pod} (previous) ==="
+  echo "--- ${pod} (previous) ---"
   kubectl logs -n ${NS} ${pod} --all-containers --previous --tail=50 2>&1 || echo "No previous logs"
-done
-
-# Grep for common error patterns across all pod logs
-for pod in $(kubectl get pods -n ${NS} -o jsonpath='{.items[*].metadata.name}'); do
+  echo "--- ${pod} (errors) ---"
   kubectl logs -n ${NS} ${pod} --all-containers --tail=200 2>/dev/null | \
     grep -iE 'error|exception|fatal|panic|timeout|refused|denied|failed|oom|kill' | \
-    head -20 | sed "s/^/${pod}: /"
+    head -20
 done
 ```
 
@@ -368,17 +361,9 @@ For each identified problem, assess its severity and blast radius.
 | **Medium** | Single replica down (redundancy covering), elevated restarts | Action within 4 hours |
 | **Low** | Warning events, non-critical resource pressure, cosmetic issues | Action within 24 hours |
 
-### Impact Assessment Template
+### Impact Assessment Format
 
-```markdown
-### Impact Assessment
-
-| Problem | Severity | Affected Resources | User Impact | Blast Radius |
-|---------|----------|--------------------|-------------|--------------|
-| OOMKill on api-server | Critical | deploy/api (0/3 ready) | API completely unavailable | All consumers of this API |
-| PVC Pending for cache | Medium | sts/redis (1/3 ready) | Degraded cache performance | Requests hitting this shard |
-| CronJob failing | Low | cronjob/cleanup | Stale data accumulating | No immediate user impact |
-```
+For each problem, present: **Problem | Severity | Affected Resources | User Impact | Blast Radius**
 
 ---
 
@@ -433,31 +418,12 @@ These actions require user decision, access, or changes to source manifests:
 | CronJob schedule wrong | Update cron expression in CronJob manifest | User (manifest change) |
 | Stuck finalizer | Remove finalizer from resource (with caution) | User (understand why it exists first) |
 
-### Remediation Report Template
+### Remediation Report Format
 
-```markdown
-## Remediation Report: ${NS}
-
-### Immediate Actions Taken
-| Action | Resource | Result |
-|--------|----------|--------|
-| Restarted deployment | deploy/api-server | Pods coming up |
-| Cleaned evicted pods | 12 pods removed | Namespace cleaned |
-
-### Actions Requiring User Intervention
-| Priority | Action | Details | Who |
-|----------|--------|---------|-----|
-| Critical | Increase memory limit | api-server OOMKilled at 512Mi, recommend 1Gi | App team |
-| High | Fix image tag | deploy/worker using tag `v2.3.1` which doesn't exist | App team |
-| Medium | Request quota increase | CPU quota 90% consumed, 2 pods Pending | Platform team |
-
-### Preventive Recommendations
-- Set up PodDisruptionBudgets for critical deployments
-- Configure resource requests and limits for all containers
-- Add readiness and liveness probes
-- Implement HPA for variable-load workloads
-- Review and right-size resource requests based on actual usage
-```
+Structure the final report with three sections:
+1. **Actions Taken** — What was auto-remediated (Action, Resource, Result)
+2. **User Intervention Required** — What needs manual action (Priority, Action, Details, Who)
+3. **Preventive Recommendations** — PDBs, resource limits, probes, HPA, right-sizing
 
 ---
 
@@ -487,26 +453,20 @@ When the appropriate MCP servers are connected, prefer these over raw kubectl wh
 - `mcp__flux-operator-mcp__get_kubernetes_logs` - Retrieve pod logs
 - `mcp__flux-operator-mcp__get_kubernetes_metrics` - Get resource consumption metrics
 
-### MCP Collection Strategy
-
-When MCP tools are available, use this sequence instead of kubectl:
-
-```
-1. get_kubernetes_resources(kind=Namespace, name=${NS})           → Namespace config
-2. get_kubernetes_resources(kind=Event, namespace=${NS})          → All events
-3. get_kubernetes_resources(kind=Pod, namespace=${NS})             → Pod status
-4. get_kubernetes_resources(kind=Deployment, namespace=${NS})      → Controller status
-5. get_kubernetes_resources(kind=StatefulSet, namespace=${NS})     → StatefulSet status
-6. get_kubernetes_resources(kind=Service, namespace=${NS})         → Services
-7. get_kubernetes_resources(kind=Endpoints, namespace=${NS})       → Endpoint health
-8. get_kubernetes_resources(kind=Ingress, namespace=${NS})         → Ingress config
-9. get_kubernetes_resources(kind=PersistentVolumeClaim, namespace=${NS}) → Storage
-10. get_kubernetes_resources(kind=ResourceQuota, namespace=${NS})  → Quotas
-11. get_kubernetes_metrics(namespace=${NS})                        → Resource usage
-12. get_kubernetes_logs(namespace=${NS}, pod=${UNHEALTHY_POD})     → Targeted logs
-```
+When MCP tools are available, follow the same Phase 1 collection order using MCP equivalents (`get_kubernetes_resources` for each resource kind, `get_kubernetes_metrics` for usage, `get_kubernetes_logs` for targeted pod logs).
 
 ---
+
+## Common Mistakes
+
+| Mistake | Why It Fails | Instead |
+|---------|--------------|---------|
+| Jumping to diagnosis after checking only pods | Misses node pressure, quota limits, or missing ConfigMaps as root cause | Complete all Phase 1 sections before diagnosing |
+| Force-deleting pods without understanding the failure | Pod respawns with the same error; masks the evidence | Collect logs and describe the pod first, then remediate |
+| Ignoring node-level causes | Pod evictions and scheduling failures are invisible at namespace level | Always run section 1.8 (Node Health) |
+| Decoding and printing Secrets | Leaks credentials into terminal history and agent context | List secret names only — never base64-decode |
+| Treating all problems as equal severity | Wastes time on low-impact issues while critical ones persist | Classify every finding through Phase 4 before acting |
+| Restarting deployments as a first resort | Hides the real problem; restarts don't fix OOMKills, bad images, or missing config | Restart only after root cause is understood |
 
 ## Behavioural Guidelines
 
