@@ -158,29 +158,25 @@ curl -H "Metadata: true" \
 
 ### Installation
 ```bash
-# kube-hunter
-pip install kube-hunter
-
 # kubescape
 brew install kubescape
 
-# trivy
+# trivy (includes cluster scanning, image scanning, and k8s misconfiguration detection)
 brew install trivy
 ```
 
+> **Note**: kube-hunter (formerly by Aqua Security) has been deprecated and is no longer maintained. Use `trivy k8s` for equivalent cluster vulnerability scanning.
+
 ### Running Scans
 ```bash
-# kube-hunter (external)
-kube-hunter --remote ${CLUSTER_IP}
-
-# kube-hunter (internal)
-kube-hunter --pod
-
 # kubescape
 kubescape scan framework nsa,mitre
 
-# trivy cluster scan
+# trivy cluster scan (replaces kube-hunter)
 trivy k8s --report summary cluster
+
+# trivy targeted scan
+trivy k8s --namespace ${NAMESPACE} --report all
 ```
 
 ## Testing Checklist
