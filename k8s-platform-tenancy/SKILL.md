@@ -279,6 +279,16 @@ spec:
 - **Logging** - Loki with namespace filtering
 - **Service Mesh** - Optional Istio/Linkerd
 
+## Common Mistakes
+
+| Mistake | Why It Fails | Instead |
+|---------|--------------|---------|
+| Granting `*` verbs on all resources in tenant role | Tenants can modify NetworkPolicies or ResourceQuotas, breaking isolation | Enumerate specific resources and verbs per role |
+| Forgetting default LimitRange on new namespaces | Pods without resource requests get best-effort QoS and are evicted first | Always pair ResourceQuota with a LimitRange |
+| Using `platform.io/tenant` label without enforcement | Anyone can relabel a namespace and bypass tenant scoping | Enforce labels with admission control (Kyverno/OPA) |
+| Skipping NetworkPolicy on "internal-only" namespaces | Compromised pod in one tenant can reach all others | Apply default-deny + explicit allow to every tenant namespace |
+| Deleting namespace before revoking RBAC | Tenant users see confusing errors; orphaned ClusterRoleBindings remain | Revoke bindings first, then delete namespace (follow offboarding checklist) |
+
 ## MCP Tools
 
 ```bash
