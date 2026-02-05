@@ -240,6 +240,16 @@ trivy k8s --namespace ${NAMESPACE} --report all
 - MITRE technique
 ```
 
+## Common Mistakes
+
+| Mistake | Why It Fails | Instead |
+|---------|--------------|---------|
+| Testing production clusters without written scope document | Causes unplanned outages; legal and compliance exposure | Get explicit written authorization defining scope, timing, and boundaries |
+| Exploiting a vulnerability without documenting the steps | Finding cannot be reproduced or verified; remediation team cannot confirm fix | Record exact commands and outputs as you go |
+| Leaving privileged pods or RoleBindings after testing | Attackers can reuse your test artifacts as real attack vectors | Clean up all artifacts immediately after each test phase |
+| Assuming RBAC is the only access control | Network-level access, cloud IAM, and metadata endpoints bypass RBAC entirely | Test all attack surfaces: RBAC, network, cloud IMDS, runtime |
+| Running scans at peak traffic hours | Scanning generates load; may trigger alerts and degrade user experience | Schedule intensive scans during maintenance windows |
+
 ## Ethical Guidelines
 
 1. **Written authorization** required before testing
