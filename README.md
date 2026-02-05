@@ -29,6 +29,7 @@ These skills provide expert knowledge that Claude Code can leverage when assisti
 | [k8s-security-hardening](./k8s-security-hardening/) | Security controls and compliance |
 | [k8s-security-redteam](./k8s-security-redteam/) | Penetration testing and security assessment |
 | [k8s-continual-improvement](./k8s-continual-improvement/) | SLOs, FinOps, and platform maturity |
+| [k8s-namespace-troubleshooting](./k8s-namespace-troubleshooting/) | Namespace-scoped workload diagnosis and remediation |
 
 ### Helm Charts
 
